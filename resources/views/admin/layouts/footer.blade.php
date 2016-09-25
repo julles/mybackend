@@ -95,7 +95,7 @@
 <script src="{{ Admin::assetAdmin() }}/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{ Admin::assetAdmin() }}/dist/js/app.min.js"></script>
-
+@yield('scripts')
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. Slimscroll is required when using the

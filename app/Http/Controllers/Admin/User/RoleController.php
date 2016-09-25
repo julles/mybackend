@@ -20,7 +20,9 @@ class RoleController extends AdminController
 
     public function getIndex()
     {
-       return view($this->view.'index');
+        $model = $this->model->where('id','!=','1');
+        
+        return $lists = $this->listing($model,['role']);
     }
 
     public function getCreate()
@@ -33,5 +35,24 @@ class RoleController extends AdminController
     public function postCreate(Requests\Admin\User\Role $request)
     {
     	return $this->insertOrUpdate($request->all(),$this->model);
+    }
+
+    public function getUpdate($id)
+    {
+        return view($this->view.'form' , [
+            'model'=>$this->model->findOrFail($id),
+        ]);
+    }
+
+    public function postUpdate(Requests\Admin\User\Role $request,$id)
+    {
+        return $this->insertOrUpdate($request->all(),$this->model->findOrFail($id));
+    }
+
+    public function getDelete($id)
+    {
+        $model = $this->model->findOrFail($id);
+
+        return $this->delete($model);
     }
 }

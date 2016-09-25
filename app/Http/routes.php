@@ -1,10 +1,11 @@
 <?php
-Route::group(['middleware'=>['web'] ,'prefix'=> \Admin::backendUrl()] , function(){
+Route::group(['middlewareGroups'=>['web'] ,'prefix'=> \Admin::backendUrl()] , function(){
+
+	Route::controller('role','Admin\User\RoleController');
+	Route::controller('example','Admin\ExampleController');
 
 	Route::get('/', function () {
 		return view('admin.example.index');
 	});
-
-	Route::controller('role','Admin\User\RoleController');
-
+	
 });

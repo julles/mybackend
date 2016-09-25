@@ -53,4 +53,19 @@ class Admin
 		]);
 	}
 
+	public function linkUpdate($plus="")
+	{
+		return Html::link($this->urlBackendAction('update/'.$plus),'Update',[
+			'class'=>'btn btn-success btn-sm'
+		]);
+	}
+
+	public function linkDelete($plus="")
+	{
+		return Html::link($this->urlBackendAction('delete/'.$plus),'Delete',[
+			'class'=>'btn btn-danger btn-sm',
+			'onclick'=>'return confirm("Are you sure want to delete this item ?")'
+		]);
+	}
+
 }
