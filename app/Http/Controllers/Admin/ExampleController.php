@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Admin\AdminController;
+use Table;
+use Admin;
 
 use App\Models\Example;
 
@@ -24,7 +26,7 @@ class ExampleController extends AdminController
     			'type'=>'text',
     			'label'=>'Name',
     			'properties'=>['class'=>'form-control'],
-    			'value'=>'Muhamad Reza Abdul Rohim',
+    			'value'=>null,
     		],
     		'email'	=> [
     			'type'=>'text',
@@ -47,9 +49,26 @@ class ExampleController extends AdminController
     	return $forms;
     }
 
+    public function getData()
+    {
+        $fields = [
+            'id',
+            'name',
+            'email',
+        ];
+
+        $model = $this->model->select($fields);
+
+        return Table::of($model)
+        ->addColumn('action' ,function($model){
+            return Admin::linkActions($model->id);
+        })
+        ->make(true);
+    }
+
     public function getIndex()
     {
-    	return $this->listing($this->model,['name','email','image']);
+        return view('admin.example.index');
     }
 
     public function getCreate()
@@ -57,4 +76,38 @@ class ExampleController extends AdminController
     	return $this->form($this->model,$this->setForm());
     }
 
+    public function postCreate(Request $request)
+    {
+        $this->validate($request,$this->model->rules());
+
+        $inputs = $request->all();
+
+        $inputs['image']=$this->handleUpload($request,$this->model,'image',[100,100]);
+
+        return $this->insertOrUpdate($inputs,$this->model);
+    }
+
+    public function getUpdate($id)
+    {
+        return $this->form($this->model->findOrFail($id),$this->setForm());
+    }
+
+    public function postUpdate(Request $request,$id)
+    {
+        $model = $this->model->findOrFail($id);
+
+        $this->validate($request,$this->model->rules());
+
+        $inputs = $request->all();
+
+        $inputs['image']=$this->handleUpload($request,$model,'image',[100,100]);
+
+        return $this->insertOrUpdate($inputs,$model);
+    }
+
+    public function getDelete($id)
+    {
+        $model = $this->model->findOrFail($id);
+        return $this->delete($model,[$model->image]);
+    }
 }

@@ -62,6 +62,14 @@
                           @endif
                             
                         </div>
+                        @if(Admin::getAction() == 'getUpdate')
+                          @if($prop['type'] == 'file')
+                            <div class="form-group">
+                              <label>Old {{ ucwords($name) }}</label> <br/>
+                              {!! Html::image(Admin::assetContents($model->{$name}) , null , ['width'=>100,'height'=>100]) !!}
+                            </div>
+                          @endif
+                        @endif
                       @endforeach
                     </div>
                     <!-- /.box-body -->

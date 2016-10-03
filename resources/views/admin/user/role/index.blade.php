@@ -28,8 +28,7 @@
                     <table class="table table-bordered" id = ''>
                       <thead>
                           <tr>
-                            <th>Name</th>
-                            <th>Email</th>
+                            <th>Role</th>
                             <th>Action</th>
                           </tr>
                       </thead>
@@ -54,8 +53,7 @@
         serverSide: true,
         ajax: '{!! Admin::urlBackendAction("data") !!}',
         columns: [
-            { data: 'name', name: 'name' },
-            { data: 'email', name: 'email' },
+            { data: 'role', name: 'role' },
             { data: 'action', name: 'action' ,ordering:false,searchable:'false'},
             
         ]

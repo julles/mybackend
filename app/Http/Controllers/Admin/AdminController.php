@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Admin;
+use Table;
+use Image;
 
 class AdminController extends Controller
 {
@@ -31,53 +33,31 @@ class AdminController extends Controller
     		->withSuccess($message);
     }
 
-    public function delete($model)
+    public function delete($model,$images=[])
     {
     	try
     	{
+            foreach($images as $image)
+            {
+                @unlink(Admin::publicContents($image));
+            }
+
     		$model->delete();
-    		return redirect(Admin::urlBackendAction('index'))
-    		->withSuccess("Data has been deleted");
-    	}catch(\Exception $e){
-    		return redirect(Admin::urlBackendAction('index'))
-    		->withSuccess("Data has cannot be deleted");
-    	}
-    }
-
-    public function setModelListing($model,$fields=[],$properties=[])
-    {
-    	$lists = $model;
-
-    	foreach($fields as $row)
-    	{
-	        if(!empty(request()->get($row)))
-	        {
-	            $lists = $lists->where($row,'like','%'.request()->get($row).'%');
-	        }
-
-    	}
-
-    	if(!empty($properties['paginate']))
-    	{
-    		$paging = $properties['paginate'];
-    	}else{
-    		$paging = 5;
+    		
+            return redirect(Admin::urlBackendAction('index'))
+    		
+            ->withSuccess("Data has been deleted");
+    	
+        }catch(\Exception $e){
+    	
+        	return redirect(Admin::urlBackendAction('index'))
+    	
+        	->withSuccess("Data cannot be deleted");
+    	
         }
-    	
-		$lists = $lists->paginate($paging);
-    	
-    	return $lists;
     }
 
-    public function listing($model,$fields=[],$properties=[])
-    {
-    	$lists= $this->setModelListing($model,$fields,$properties);
-    	return view('admin.scaffolding.listing' ,[
-            'lists'=>$lists,
-            'fields'=>$fields,
-        ]);
-    }
-
+    
     public function form($model,$setForm)
     {
         $model = $model;
@@ -89,4 +69,36 @@ class AdminController extends Controller
             'forms'=>$forms,
         ]);
     }
+
+    public function handleUpload($request,$model,$fieldName,$resize=[])
+    {
+       $image = $request->file($fieldName);
+       
+        if(!empty($image))
+        {
+             if(!empty($model->$fieldName))
+                {
+                    @unlink(public_path('contents/'.$model->$fieldName));
+                }
+
+            $imageName = Admin::randomImage().'.'.$image->getClientOriginalExtension();
+
+            $image = \Image::make($image);
+
+            if(!empty($resize))
+            {
+                $image = $image->resize($resize[0],$resize[1]);
+            }
+
+            $image = $image->save(public_path('contents/'.$imageName));
+
+            return $imageName;
+
+        }else{
+
+            return $model->$fieldName;
+        }
+    }
+
+
 }

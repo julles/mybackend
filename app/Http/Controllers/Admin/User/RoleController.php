@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Admin\AdminController;
-
+use Table;
 use App\Models\Role;
 
 class RoleController extends AdminController
@@ -14,22 +14,46 @@ class RoleController extends AdminController
 	public function __construct(Role $model)
 	{
         parent::__construct();
-		$this->view = 'admin.user.role.';
 		$this->model = $model;
 	}
 
+    public function setForm()
+    {
+        $forms = [
+            'role' => [
+                'type'=>'text',
+                'label'=>'Role',
+                'properties'=>['class'=>'form-control']
+            ],
+        ];
+
+        return $forms;
+    }
+
+    public function getData()
+    {
+        $fields = [
+            'id',
+            'role',
+        ];
+
+        $model = $this->model->select($fields);
+
+        return Table::of($model)
+        ->addColumn('action' ,function($model){
+            return Admin::linkActions($model->id);
+        })
+        ->make(true);
+    }
+
     public function getIndex()
     {
-        $model = $this->model->where('id','!=','1');
-        
-        return $lists = $this->listing($model,['role']);
+        return view('admin.user.role.index');
     }
 
     public function getCreate()
     {
-        return view($this->view.'form' , [
-    		'model'=>$this->model,
-    	]);
+        return $this->form($this->model,$this->setForm());
     }
 
     public function postCreate(Requests\Admin\User\Role $request)
@@ -39,9 +63,7 @@ class RoleController extends AdminController
 
     public function getUpdate($id)
     {
-        return view($this->view.'form' , [
-            'model'=>$this->model->findOrFail($id),
-        ]);
+        return $this->form($this->model->findOrFail($id),$this->setForm());
     }
 
     public function postUpdate(Requests\Admin\User\Role $request,$id)

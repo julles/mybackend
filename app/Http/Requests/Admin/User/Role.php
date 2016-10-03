@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Admin\User;
 
 use App\Http\Requests\Request;
-
 class Role extends Request
 {
     /**
@@ -24,7 +23,7 @@ class Role extends Request
     public function rules()
     {
         return [
-            'role'=>'required|max:255',
+            'role'=>'required|max:255|unique:roles,role,'.\Admin::getId(),
         ];
     }
 }

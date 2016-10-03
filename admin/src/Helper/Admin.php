@@ -24,6 +24,13 @@ class Admin
 		return request()->route()->getPrefix();
 	}
 
+	public function getAction()
+	{
+		$currentRoute =  request()->route()->getActionName();
+		$explode = explode('@',$currentRoute);
+		return $explode[1];
+	}
+
 	public function urlBackend($menu)
 	{
 		$prefix = $this->getPrefix();
@@ -68,4 +75,30 @@ class Admin
 		]);
 	}
 
+	public function linkActions($plus="")
+	{
+		return $this->linkUpdate($plus).' | '.$this->linkDelete($plus);
+	}
+
+	public function randomImage()
+	{
+		return md5(date("YmdHis"));
+	}
+
+	public function publicContents($file)
+	{
+		return public_path('contents/'.$file);
+	}
+
+	public function assetContents($file)
+	{
+		return asset('contents/'.$file);
+	}
+
+	public function getId()
+	{
+		$url = request()->url();
+		$ex = explode("/",$url);
+		return end($ex);
+	}
 }

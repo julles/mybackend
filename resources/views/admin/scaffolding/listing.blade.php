@@ -25,43 +25,17 @@
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
-                    <table class="table table-bordered">
-                      <tbody>
+                    <table class="table table-bordered" id = ''>
+                      <thead>
                           <tr>
-                          @foreach($fields as $row)
-                            <th>{{ ucwords($row) }}</th>
-                          @endforeach
+                            <th>s</th>
                             <th>Action</th>
                           </tr>
-                          <tr>
-                          {!! Form::open(['id'=>'form_search']) !!}
-                            @foreach($fields as $row)
-                              <td>{{ Form::text($row,request()->get($row),['class'=>'form-control','onblur'=>'return search()']) }}</td>
-                            @endforeach  
-                              <td>-</td>
-                          {!! Form::close() !!}
-                          </tr>
-                        @foreach($lists as $row)  
-                          <tr>
-                            @foreach($fields as $field)
-                              <td><?= $row->$field ?></td>
-                            @endforeach
-                            <td>
-                              <?= Admin::linkUpdate($row->id) ?>
-                              |
-                              <?= Admin::linkDelete($row->id) ?>
-                            </td>
-                          </tr>
-                        @endforeach
-                      </tbody>
+                      </thead>
+
                     </table>
                   </div>
                   <!-- /.box-body -->
-                  <div class="box-footer clearfix">
-                    
-                    <?= $lists->render() ?>
-
-                  </div>
                 </div>
           </div>
       </div>
@@ -70,20 +44,12 @@
   </div>
   <!-- /.content-wrapper -->
 @endsection
-@section('scripts')
+@push('scripts')
 <script type="text/javascript">
-  function search()
-  {
-    data = $("#form_search").serialize();
-    url = '{{ request()->url }}?'+data;
-    document.location.href=url;
-  }
+  $(function(){
 
-  $(document).ready(function(){
-    $("#form_search").submit(function(){
-      return search();
-    });
-  });
+      $("table").DataTable();
 
+  });  
 </script>
-@endsection
+@endpush

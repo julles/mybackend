@@ -159,6 +159,7 @@ return [
         Yajra\Datatables\DatatablesServiceProvider::class,
         Admin\Providers\AdminProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -208,6 +209,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Table' => Yajra\Datatables\Facades\Datatables::class,
         'Admin'=>Admin\Facades\AdminFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
 ];
