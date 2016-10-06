@@ -19,6 +19,9 @@ class ExampleController extends AdminController
     	$this->model = $model;
     }
 
+    /**
+     * Scaffolding form
+     */
     public function setForm()
     {
     	$forms = [
@@ -49,6 +52,12 @@ class ExampleController extends AdminController
     	return $forms;
     }
 
+    /**
+     * Method yang di gunakan untuk mengeluarkan data dari record table examples
+     * berdasarkan query yang sudah ditentukan, method pendukung datatables server side
+     * yang berada di method getIndex()
+     * @return [json]
+     */
     public function getData()
     {
         $fields = [
@@ -65,7 +74,7 @@ class ExampleController extends AdminController
         })
         ->make(true);
     }
-
+    
     public function getIndex()
     {
         return view('admin.example.index');

@@ -76,10 +76,10 @@ class AdminController extends Controller
        
         if(!empty($image))
         {
-             if(!empty($model->$fieldName))
-                {
-                    @unlink(public_path('contents/'.$model->$fieldName));
-                }
+            if(!empty($model->$fieldName))
+            {
+                @unlink(public_path('contents/'.$model->$fieldName));
+            }
 
             $imageName = Admin::randomImage().'.'.$image->getClientOriginalExtension();
 

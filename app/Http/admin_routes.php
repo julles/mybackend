@@ -4,14 +4,14 @@
  */
 Route::group(['middlewareGroups'=>['web'] ,'prefix'=> \Admin::backendUrl()] , function(){
 
-	foreach(\Site::parentIdNotNull() as $row)
+	foreach(\Site::parentIsNotNull() as $row)
 	{
 		if(Site::controllerExists($row) == true)
 		{
 			Route::controller($row->slug,$row->controller);
 		}else{
 			Route::get($row->slug.'/index' , function(){
-				echo '<h1>Controller Kaga ada mas :)</h1>';
+				throw new \Exception("Controller tidak ditemukan mas :) , cek method controllerExists() di class Site.", 1);
 			});
 		}
 	}

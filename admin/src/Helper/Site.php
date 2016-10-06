@@ -43,7 +43,7 @@ class Site extends Admin
 		}
 	}
 
-	public function parentIdNotNull()
+	public function parentIsNotNull()
 	{
 		$model = new Menu;
 

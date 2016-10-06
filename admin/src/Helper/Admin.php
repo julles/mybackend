@@ -5,26 +5,46 @@ use App\Models\Menu;
 
 class Admin
 {
+	/**
+	 * Mengambil variable backendUrl di file admin.php
+	 * @return [string]
+	 */
 	public function backendUrl()
 	{
 		return config('admin.backendUrl');
 	}
 
+	/**
+	 * Mengambil variable projectName di file admin.php
+	 * @return [string]
+	 */
 	public function projectName()
 	{
 		return config('admin.projectName');
 	}
 
+	/**
+	 * asset path di tambahin adminlte, jadi bisa dinamis kalo path css adminlte berubah
+	 * @return [string]
+	 */
 	public function assetAdmin($plus="")
 	{
 		return asset('adminlte');
 	}
 
+	/**
+	 * mengambil data prefix di route group admin
+	 * @return [string] 
+	 */
 	public function getPrefix()
 	{
 		return request()->route()->getPrefix();
 	}
 
+	/**
+	 * mengambil method action controller
+	 * @return [string] ex : getIndex(),getUpdate()
+	 */
 	public function getAction()
 	{
 		$currentRoute =  request()->route()->getActionName();
@@ -32,6 +52,10 @@ class Admin
 		return $explode[1];
 	}
 
+	/**
+	 * mengambil action di url 
+	 * @return [string] ex : index,update,delete
+	 */
 	public function rawAction()
 	{
 		$url =  request()->url();	
@@ -42,6 +66,10 @@ class Admin
 		return $arr[$count-$min];	
 	}
 
+	/**
+	 * mengambil menu di url 
+	 * @return [string] ex : role,user,ect.
+	 */
 	public function rawMenu()
 	{
 		$url =  request()->url();	
@@ -52,11 +80,15 @@ class Admin
 		return $arr[$count-$min];
 	}
 
+	/**
+	 * Mereturn data satu record dari table menu by parameter slug
+	 * kalo slug kosong maka parameter pembanding yang diambil method rawMenu()
+	 * @param  string $slug [paramter pembanding slug]
+	 * @return [string]
+	 */
 	public function getMenu($slug = "")
 	{
 		$model = new Menu;
-
-		$action = $this->getAction();
 
 		if(!empty($slug))
 		{
