@@ -41,7 +41,12 @@ class RoleController extends AdminController
 
         return Table::of($model)
         ->addColumn('action' ,function($model){
-            return Admin::linkActions($model->id);
+            if($model->id != 1)
+            {
+                return Admin::linkActions($model->id);
+            }else{
+                return '-';
+            }    
         })
         ->make(true);
     }
@@ -63,18 +68,37 @@ class RoleController extends AdminController
 
     public function getUpdate($id)
     {
-        return $this->form($this->model->findOrFail($id),$this->setForm());
+        $model = $this->model->findOrFail($id);
+
+        $this->exception($model);
+
+        return $this->form($model,$this->setForm());
     }
 
     public function postUpdate(Requests\Admin\User\Role $request,$id)
     {
-        return $this->insertOrUpdate($request->all(),$this->model->findOrFail($id));
+        $model = $this->model->findOrFail($id);
+
+        $this->exception($model);
+
+        return $this->insertOrUpdate($request->all(),$model);
     }
 
     public function getDelete($id)
     {
         $model = $this->model->findOrFail($id);
 
+        $this->exception($model);
+
         return $this->delete($model);
+    }
+
+    public function exception($model)
+    {
+        if($model->id == 1)
+        {
+           throw new \Exception("Maaf Superadmin tidak bisa dihapus atau di update :) silahkan cek method exception()", 1);
+             
+        }
     }
 }
