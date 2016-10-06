@@ -1,6 +1,7 @@
 <?php namespace Admin\Helper;
 
 use Html;
+use App\Models\Menu;
 
 class Admin
 {
@@ -31,9 +32,81 @@ class Admin
 		return $explode[1];
 	}
 
+	public function rawAction()
+	{
+		$url =  request()->url();	
+		$arr = explode("/",$url);
+		$count = count($arr);
+		$end = end($arr);
+		$min = is_numeric($end) ? 2 : 1;
+		return $arr[$count-$min];	
+	}
+
+	public function rawMenu()
+	{
+		$url =  request()->url();	
+		$arr = explode("/",$url);
+		$count = count($arr);
+		$end = end($arr);
+		$min = is_numeric($end) ? 3 : 2;
+		return $arr[$count-$min];
+	}
+
+	public function getMenu($slug = "")
+	{
+		$model = new Menu;
+
+		$action = $this->getAction();
+
+		if(!empty($slug))
+		{
+			$model = $model->whereSlug($slug);
+		}else{
+			$model = $model->whereSlug($this->rawMenu());
+		}
+
+		return $model->first();
+	}
+
+	public function getParentMenu($slug = "")
+	{
+		$menu = $this->getMenu($slug);
+
+		return $menu->parent;
+	}
+
+	public function labelMenu($slug="")
+	{
+		return $this->getMenu($slug)->title;
+	}
+
+	public function labelParentMenu($slug="")
+	{
+		return $this->getParentMenu($slug)->title;
+	}
+
+	public function labelAction()
+	{
+		$action = $this->rawAction();
+	
+		if($action == 'index')
+		{
+			$result = 'List';
+		}else{
+			$result = ucwords($action);
+		}
+
+		return $result;
+	}
+
 	public function urlBackend($menu)
 	{
 		$prefix = $this->getPrefix();
+
+		if($prefix == '/')
+		{
+			$prefix = "";
+		}
 
 		return url($prefix.'/'.$menu);
 	}
@@ -100,5 +173,15 @@ class Admin
 		$url = request()->url();
 		$ex = explode("/",$url);
 		return end($ex);
+	}
+
+	public function injectModel($model)
+	{
+	
+	}
+
+	public function addMenu($params=[])
+	{
+
 	}
 }

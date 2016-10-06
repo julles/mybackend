@@ -209,6 +209,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Table' => Yajra\Datatables\Facades\Datatables::class,
         'Admin'=>Admin\Facades\AdminFacade::class,
+        'Site'=>Admin\Facades\SiteFacade::class,
         'Image' => Intervention\Image\Facades\Image::class
     ],
 

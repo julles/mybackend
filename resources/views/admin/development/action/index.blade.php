@@ -5,7 +5,6 @@
     <!-- Content Header (Page header) -->
     @include('admin.scaffolding.content_header')
 
-
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -20,7 +19,8 @@
                     <table class="table table-bordered" id = ''>
                       <thead>
                           <tr>
-                            <th>Role</th>
+                            <th>Code</th>
+                            <th>Name</th>
                             <th>Action</th>
                           </tr>
                       </thead>
@@ -45,8 +45,9 @@
         serverSide: true,
         ajax: '{!! Admin::urlBackendAction("data") !!}',
         columns: [
-            { data: 'role', name: 'role' },
-            { data: 'action', name: 'action' ,ordering:false,searchable:'false'},
+            { data: 'code', name: 'code' },
+            { data: 'action', name: 'action' },
+            { data: 'actions', name: 'actions' ,ordering:false,searchable:'false'},
             
         ]
     });

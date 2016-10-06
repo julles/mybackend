@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 
 use Admin\Helper\Admin;
+use Admin\Helper\Site;
 
 class AdminProvider extends ServiceProvider
 {
@@ -18,7 +19,11 @@ class AdminProvider extends ServiceProvider
 		// );
 
 		$this->app->bind('register-admin' , function(){
-			return new Admin;
+			return new Admin();
+		});
+
+		$this->app->bind('register-site',function(){
+			return new Site();
 		});
 	}
 }

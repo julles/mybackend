@@ -32,8 +32,33 @@
       <ul class="sidebar-menu">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+        @foreach(Site::parents() as $parent)
+          <li class = "{{ Site::isClassTreeview($parent) }}">
+              <a href="{{ Site::urlMenu($parent) }}">
+                <i class="fa fa-link"></i> <span>{{ $parent->title }}</span>
+              </a>
+
+              @if(Site::countChild($parent) > 0)
+                <ul class="treeview-menu">
+                  @foreach($parent->childs()->orderBy('order','asc')->get() as $child)
+                    <li>
+                      <a href="{{ Site::urlMenu($child) }}">{{ $child->title }}</a>
+                      @if(Site::countChild($child) > 0)
+                        <ul class="treeview-menu">
+                          @foreach($child->childs()->orderBy('order','asc')->get() as $grand)
+                            <a href="{{ Site::urlMenu($grand) }}">{{ $grand->title }}</a>
+                          @endforeach
+                        </ul>
+                      @endif
+                    </li>
+                  @endforeach
+                </ul>
+              @endif
+
+          </li>
+        @endforeach
         <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+        <?php/*
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
             <span class="pull-right-container">
@@ -44,7 +69,7 @@
             <li><a href="#">Link in level 2</a></li>
             <li><a href="#">Link in level 2</a></li>
           </ul>
-        </li>
+        </li>*/?>
       </ul>
       <!-- /.sidebar-menu -->
     </section>
