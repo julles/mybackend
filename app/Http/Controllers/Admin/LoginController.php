@@ -35,4 +35,11 @@ class LoginController extends AdminController
     		return redirect()->back()->withInfo('Data not Found!');
     	}
     }
+
+    public function getSignOut()
+    {
+        \Auth::logout();
+    
+        return redirect('login');
+    }
 }

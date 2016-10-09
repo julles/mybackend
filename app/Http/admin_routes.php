@@ -6,7 +6,7 @@ Route::group(['middlewareGroups'=>['web']] , function(){
 	Route::controller('login','Admin\LoginController');
 });
 
-Route::group(['middleware'=>['web','auth'] ,'prefix'=> \Admin::backendUrl()] , function(){
+Route::group(['middleware'=>['auth'] ,'prefix'=> \Admin::backendUrl()] , function(){
 
 	foreach(\Site::parentIsNotNull() as $row)
 	{

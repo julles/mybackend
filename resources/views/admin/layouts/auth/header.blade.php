@@ -27,5 +27,5 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="{{ Admin::assetAdmin() }}/index2.html"><b>MY</b>Backend</a>
+    <a href="{{ Admin::assetAdmin() }}/index2.html"><b>{{ Admin::projectName() }}</b></a>
   </div>

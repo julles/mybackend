@@ -1,3 +1,6 @@
+@php
+$user = user();
+@endphp
 <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
 
@@ -7,7 +10,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="{{ Admin::assetAdmin() }}/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="{{ Admin::assetContents($user->avatar) }}" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p>Alexander Pierce</p>
