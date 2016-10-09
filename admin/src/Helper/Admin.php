@@ -96,7 +96,7 @@ class Admin
 		}else{
 			$model = $model->whereSlug($this->rawMenu());
 		}
-
+		
 		return $model->first();
 	}
 
@@ -207,9 +207,11 @@ class Admin
 		return end($ex);
 	}
 
-	public function injectModel($model)
+	public function inject($model)
 	{
+		$model =  "App\Models\\$model";
 	
+		return new $model;
 	}
 
 	public function addMenu($params=[])

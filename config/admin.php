@@ -1,6 +1,6 @@
 <?php
 
 return [
-	'backendUrl'=>'/',
+	'backendUrl'=>'admin',
 	'projectName'=>'My Backend',
 ];

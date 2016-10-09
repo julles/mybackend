@@ -45,7 +45,7 @@
 
                           @if($prop['type'] == 'select')
                             {!! Form::{$prop['type']}($name,$prop['selects'],$value ,$properties) !!}
-                          @elseif($prop['type'] == 'file')
+                          @elseif($prop['type'] == 'file' ||  $prop['type'] == 'password')
                               {!! Form::{$prop['type']}($name,$properties) !!}
                           @else
                             {!! Form::{$prop['type']}($name,$value,$properties) !!}
