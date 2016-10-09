@@ -1,10 +1,19 @@
-@if(Session::has('success'))	
+@php
 
-	<div class="alert alert-success">
-	  {!! Session::get('success') !!}
-	</div>
+$notifs = ['success','info','danger'];
 
-@endif
+foreach($notifs as $notif)
+{
+	if(Session::has($notif))
+	{
+		echo '<div class="alert alert-'.$notif.'">
+		  		'.Session::get($notif).'
+			  </div>';			
+	}
+}
+
+@endphp
+
 
 @if(@$errors->any())
 		<div class = 'alert alert-danger'>

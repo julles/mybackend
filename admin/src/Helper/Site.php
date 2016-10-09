@@ -25,7 +25,15 @@ class Site extends Admin
 
 		if($count > 0)
 		{
-			return 'treeview';
+			$cekParent = $this->getParentMenu($this->getMenu()->slug);
+			if(!empty($cekParent->id))
+			{
+				if($cekParent->slug == $model->slug)
+					return 'treeview active';
+			}else{
+				return 'treeview';
+			}
+			
 		}else{
 			return '';
 		}
@@ -47,7 +55,7 @@ class Site extends Admin
 	{
 		$model = new Menu;
 
-		$model = $model->where('parent_id','!=',null)
+		$model = $model->where('controller','!=',null)
 			->get();
 
 		return $model;

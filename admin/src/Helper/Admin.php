@@ -6,6 +6,16 @@ use App\Models\Menu;
 class Admin
 {
 	/**
+	 * Mengambil variable defaultPage di file admin.php
+	 * @return [string]
+	 */
+	public function defaultPage()
+	{
+		return config('admin.defaultPage');
+	}
+
+
+	/**
 	 * Mengambil variable backendUrl di file admin.php
 	 * @return [string]
 	 */
@@ -114,7 +124,15 @@ class Admin
 
 	public function labelParentMenu($slug="")
 	{
-		return $this->getParentMenu($slug)->title;
+		$parent = $this->getParentMenu($slug);
+
+		if(!empty($parent))
+		{
+			$result = $parent->title;
+		}else{
+			$result = "";
+		}
+		return $result;
 	}
 
 	public function labelAction()
@@ -133,7 +151,7 @@ class Admin
 
 	public function urlBackend($menu)
 	{
-		$prefix = $this->getPrefix();
+		$prefix = $this->backendUrl();
 
 		if($prefix == '/')
 		{
@@ -212,6 +230,11 @@ class Admin
 		$model =  "App\Models\\$model";
 	
 		return new $model;
+	}
+
+	public function urlDefaultPage()
+	{
+		return $this->urlBackend($this->defaultPage().'/index');
 	}
 
 	public function addMenu($params=[])

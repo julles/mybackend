@@ -96,7 +96,9 @@ class UserController extends AdminController
     	$inputs = $request->all();
 
     	$inputs['avatar']=$this->handleUpload($request,$model,'avatar',[160,160]);
-	
+	   
+        $inputs['password']=\Hash::make($request->password);
+
     	return $this->insertOrUpdate($inputs,$model);
 	}
 
@@ -115,7 +117,9 @@ class UserController extends AdminController
     	$inputs = $request->all();
 
     	$inputs['avatar']=$this->handleUpload($request,$model,'avatar',[160,160]);
-	
+	   
+        $inputs['password']=\Hash::make($request->password);
+
     	return $this->insertOrUpdate($inputs,$model);
 	}
 

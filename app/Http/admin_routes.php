@@ -2,7 +2,11 @@
 /**
  * Admin Routes here
  */
-Route::group(['middlewareGroups'=>['web'] ,'prefix'=> \Admin::backendUrl()] , function(){
+Route::group(['middlewareGroups'=>['web']] , function(){
+	Route::controller('login','Admin\LoginController');
+});
+
+Route::group(['middleware'=>['web','auth'] ,'prefix'=> \Admin::backendUrl()] , function(){
 
 	foreach(\Site::parentIsNotNull() as $row)
 	{
