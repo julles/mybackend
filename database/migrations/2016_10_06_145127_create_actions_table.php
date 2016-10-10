@@ -18,6 +18,35 @@ class CreateActionsTable extends Migration
             $table->string('action',100);
             $table->timestamps();
         });
+
+        $data = [
+            [
+                'code'=>'index',
+                'action'=>'Index',
+            ],
+            [
+                'code'=>'create',
+                'action'=>'Create',
+            ],
+            [
+                'code'=>'update',
+                'action'=>'Update',
+            ],
+            [
+                'code'=>'delete',
+                'action'=>'Delete',
+            ],
+            [
+                'code'=>'publish',
+                'action'=>'Publish',
+            ],
+            [
+                'code'=>'view',
+                'action'=>'View',
+            ],
+        ];
+
+        \DB::table('actions')->insert($data);
     }
 
     /**

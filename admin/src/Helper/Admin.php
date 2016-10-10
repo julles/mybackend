@@ -2,7 +2,7 @@
 
 use Html;
 use App\Models\Menu;
-
+use DB;
 class Admin
 {
 	/**
@@ -176,31 +176,81 @@ class Admin
 		return url($result);
 	}
 
+	public function cekMenuAction($code)
+	{
+		$menu = $this->getMenu();
+
+		$action = $menu->actions()
+			->whereCode($code)
+			->first();
+
+		return $action;
+	}
+
 	public function linkCreate()
 	{
-		return Html::link($this->urlBackendAction('create'),'Create',[
-			'class'=>'btn btn-primary'
-		]);
+
+		$create = $this->cekMenuAction('create');
+		if($create != null)
+			return Html::link($this->urlBackendAction('create'),'Create',[
+				'class'=>'btn btn-primary'
+			]);
 	}
 
 	public function linkUpdate($plus="")
 	{
-		return Html::link($this->urlBackendAction('update/'.$plus),'Update',[
-			'class'=>'btn btn-success btn-sm'
-		]);
+		$update = $this->cekMenuAction('update');
+		
+		if($update != null)	
+			return Html::link($this->urlBackendAction('update/'.$plus),'Update',[
+				'class'=>'btn btn-success btn-sm'
+			]);
+	}
+
+	public function linkView($plus="")
+	{
+		$view = $this->cekMenuAction('view');
+		
+		if($view != null)	
+			return Html::link($this->urlBackendAction('view/'.$plus),'View',[
+				'class'=>'btn btn-info btn-sm'
+			]);
 	}
 
 	public function linkDelete($plus="")
 	{
-		return Html::link($this->urlBackendAction('delete/'.$plus),'Delete',[
-			'class'=>'btn btn-danger btn-sm',
-			'onclick'=>'return confirm("Are you sure want to delete this item ?")'
-		]);
+		$delete = $this->cekMenuAction('delete');
+		
+		if($delete != null)	
+		
+			return Html::link($this->urlBackendAction('delete/'.$plus),'Delete',[
+				'class'=>'btn btn-danger btn-sm',
+				'onclick'=>'return confirm("Are you sure want to delete this item ?")'
+			]);
+	}
+
+	public function linkPublish()
+	{
+		
 	}
 
 	public function linkActions($plus="")
 	{
-		return $this->linkUpdate($plus).' | '.$this->linkDelete($plus);
+		$actions = $this->inject('Action')
+			->select('code')
+			->whereNotIn('code',['create','index'])
+			->get();
+
+		$links = "";
+
+		foreach($actions as $action)
+		{
+			$upper = ucwords($action->code);
+			$method = "link$upper";
+			$links .= $this->{$method}($plus).' ';
+		}
+
+		return $links;
 	}
 
 	public function randomImage()
@@ -237,8 +287,84 @@ class Admin
 		return $this->urlBackend($this->defaultPage().'/index');
 	}
 
-	public function addMenu($params=[])
+	public function dbAction($code = "")
 	{
+		$model = $this->inject('Action');
 
+		$model = $model->whereCode($code)->first();
+
+		return $model;
+	}
+
+	public function addMenu($params=[] , $actions=[])
+	{
+		$cek = $this->getMenu($params['slug']);
+
+		if(empty($cek->slug))
+		{
+			if($params['parent_id'] != null)
+			{
+				$cekParent = $this->getMenu($params['parent_id']);
+
+				if(!empty($cekParent->slug))
+				{
+					$params['parent_id'] = $cekParent->id;
+				}
+			}
+
+			$model = Menu::create($params);
+			
+			$modelMenuAction = $this->inject('MenuAction');
+			
+			foreach($actions as $action)
+			{
+				$modelAction = $this->dbAction($action);
+				if(!empty($modelAction->id))
+				{
+					$save = $modelMenuAction->create([
+						'menu_id'=>$model->id,
+						'action_id'=>$modelAction->id,
+					]);
+				}
+			}		
+		}
+	}
+
+	public function updateMenu($params=[] , $actions=[])
+	{
+		$cek = $this->getMenu($params['slug']);
+
+		$cekParent = $this->getMenu($params['parent_id']);
+
+		if(!empty($cekParent->slug))
+		{
+			$params['parent_id'] = $cekParent->id;
+		}
+
+		
+		$cek->menuAction()->delete();
+
+		$model = $this->getMenu($params['slug']);
+		
+		$model->update($params);
+
+		$modelMenuAction = $this->inject('MenuAction');
+		
+		foreach($actions as $action)
+		{
+			$modelAction = $this->dbAction($action);
+			if(!empty($modelAction->id))
+			{
+				$save = $modelMenuAction->create([
+					'menu_id'=>$model->id,
+					'action_id'=>$modelAction->id,
+				]);
+			}
+		}
+	}
+
+	public function deleteMenu($slug)
+	{
+		$this->getMenu($slug)->delete();
 	}
 }
