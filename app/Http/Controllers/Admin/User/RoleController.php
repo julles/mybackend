@@ -93,6 +93,15 @@ class RoleController extends AdminController
         return $this->delete($model);
     }
 
+    public function getView($id)
+    {
+        $model = $this->model->findOrFail($id);
+
+        $this->exception($model);
+
+        
+    }    
+
     public function exception($model)
     {
         if($model->id == 1)
