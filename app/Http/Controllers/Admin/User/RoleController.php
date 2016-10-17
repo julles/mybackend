@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin\User;
 
 use Illuminate\Http\Request;
 use Admin;
+use Site;
 use App\Http\Requests;
 use App\Http\Controllers\Admin\AdminController;
 use Table;
 use App\Models\Role;
+use App\Models\Menu;
+use App\Models\Right;
+use DB;
 
 class RoleController extends AdminController
 {
@@ -15,7 +19,8 @@ class RoleController extends AdminController
 	{
         parent::__construct();
 		$this->model = $model;
-	}
+        $this->view = 'admin.user.role.';
+    }
 
     public function setForm()
     {
@@ -53,7 +58,7 @@ class RoleController extends AdminController
 
     public function getIndex()
     {
-        return view('admin.user.role.index');
+        return view($this->view.'index');
     }
 
     public function getCreate()
@@ -99,8 +104,47 @@ class RoleController extends AdminController
 
         $this->exception($model);
 
-        
+        $menus = Site::parents();
+
+        return view($this->view.'view',[
+            'model'=>$model,
+            'menus'=>$menus,
+        ]);
     }    
+
+    public function postView(Request $request , $id)
+    {
+        $count = count($request->menu_action_id);
+        $role = $this->model->findOrFail($id);
+        // DB::beginTransaction();
+
+        try
+        {
+            $data = [];
+            $role->rights()->delete();
+            for($a=0;$a<$count;$a++)
+            {
+                $menu_action_id = $request->menu_action_id[$a];
+                if(!empty($menu_action_id))
+                {
+                    $data[] = [
+                        'role_id'=>$role->id,
+                        'menu_action_id'=>$menu_action_id,
+                    ];
+                }
+            }
+
+            Right::insert($data);
+
+            DB::commit();
+            return redirect(Admin::urlBackendAction('index'))
+                ->with('success','Data has beeen updated');
+        }catch(\Exception $e){
+            DB::rollback();
+            return redirect(Admin::urlBackendAction('index'))
+                ->with('info','Data cannot be updated'.json_encode($e));
+        }    
+    }
 
     public function exception($model)
     {

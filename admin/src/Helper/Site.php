@@ -2,6 +2,7 @@
 
 use Admin\Helper\Admin;
 use App\Models\Menu;
+use App\Models\Role;
 
 class Site extends Admin
 {
@@ -78,4 +79,63 @@ class Site extends Admin
 
 	}
 
+	public function countActionFromMenu($menu)
+	{
+		if($menu->actions()->count() > 0)
+		{
+			return $menu->actions;
+		}
+	}
+
+	public function whileChildTrChecked($child,$action)
+	{
+		$role = Role::findOrFail($this->getId());
+		
+		$cek = $child->menuAction()
+			->where('action_id',$action->id)
+			->first()
+			->rights()
+			->where('role_id',$role->id)
+			->first();
+
+		$result = "";
+
+		if(!empty($cek->id))
+		{
+			$result = 'checked';
+		}
+
+		return $result;
+	}
+
+	public function whileChildTr($childs,$no)
+	{
+		$str = "";
+
+		$colors = ['#DAE9D1','#E9D1D9'];
+
+		if($childs->count() > 0)
+		{
+			foreach($childs as $child)
+			{
+				$str .= "<tr style = 'background-color:".$colors[$no-1].";'>";
+				$str .= "<td>".$child->title."</td>";
+				$str .= "<td>";
+					if(!empty($this->countActionFromMenu($child)))
+					{
+						foreach($child->actions as $action)
+						{
+							$checked = $this->whileChildTrChecked($child,$action);
+							$str .= "<input $checked type = 'checkbox' name = 'menu_action_id[]' value = '".$action->pivot->id."' /> ".$action->action.'<br/>';
+						}
+					}
+				$str .="</td>";	
+				$str .= "</tr>";
+				$str .= $this->whileChildTr($child->childs,$no);
+			}
+
+		}
+
+		return $str;
+	}
 }

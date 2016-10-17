@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Menu;
 use App\Models\Action;
+use App\Models\Role;
+use App\Models\Right;
 
 class MenuAction extends Model
 {
@@ -18,5 +20,16 @@ class MenuAction extends Model
     public function action()
     {
     	return $this->belongsTo(Action::class,'action_id');
+    }
+
+    public function roles()
+    {
+    	return $this->belongsToMany(Role::class,'rights')
+            ->withPivot('id');
+    }
+
+    public function rights()
+    {
+        return $this->hasMany(Right::class,'menu_action_id');
     }
 }
