@@ -187,11 +187,50 @@ class Admin
 		return $action;
 	}
 
+	public function cekRight($actionCode = "",$menu="")
+	{
+		$result = 'false';
+		$role = user()->role;
+		$actionCode = !empty($actionCode) ? $actionCode : $actionCode = $this->rawAction();
+		if($role->id == 1)
+		{
+			$result = 'true';
+		}else{
+			if(!empty($actionCode))
+			{
+				$action = $this->cekMenuAction($actionCode);
+
+				if(empty($action->id))
+				{
+					$result = 'true';
+				}else{
+					$menu = empty($menu) ? $this->getMenu() : $menu;
+					$cek = $menu->menuAction()
+					->where('action_id',$action->id)
+					->first()
+					->rights()
+					->where('role_id',$role->id)
+					->first();
+
+					if(!empty($cek->id))
+					{
+						$result = "true";
+					}else{
+						$result = 'false';
+					}
+				}
+			}
+		}
+		return $result;	
+	}
+
+	
+
 	public function linkCreate()
 	{
 
-		$create = $this->cekMenuAction('create');
-		if($create != null)
+		$create = $this->cekRight('create');
+		if($create == 'true')
 			return Html::link($this->urlBackendAction('create'),'Create',[
 				'class'=>'btn btn-primary'
 			]);
@@ -199,9 +238,9 @@ class Admin
 
 	public function linkUpdate($plus="")
 	{
-		$update = $this->cekMenuAction('update');
+		$update = $this->cekRight('update');
 		
-		if($update != null)	
+		if($update == 'true')	
 			return Html::link($this->urlBackendAction('update/'.$plus),'Update',[
 				'class'=>'btn btn-success btn-sm'
 			]);
@@ -209,9 +248,9 @@ class Admin
 
 	public function linkView($plus="")
 	{
-		$view = $this->cekMenuAction('view');
+		$view = $this->cekRight('view');
 		
-		if($view != null)	
+		if($view == 'true')	
 			return Html::link($this->urlBackendAction('view/'.$plus),'View',[
 				'class'=>'btn btn-info btn-sm'
 			]);
@@ -219,9 +258,9 @@ class Admin
 
 	public function linkDelete($plus="")
 	{
-		$delete = $this->cekMenuAction('delete');
+		$delete = $this->cekRight('delete');
 		
-		if($delete != null)	
+		if($delete == 'true')	
 		
 			return Html::link($this->urlBackendAction('delete/'.$plus),'Delete',[
 				'class'=>'btn btn-danger btn-sm',

@@ -138,4 +138,25 @@ class Site extends Admin
 
 		return $str;
 	}
+
+	public function showHideMenu($menu)
+	{
+		$result = $this->cekRight('index',$menu);
+		return $result;
+	}
+
+	public function countChildIndex($childs)
+	{
+		$result = 'false';
+		foreach($childs as $child)
+		{
+			$cek = $this->showHideMenu($child);
+			if($cek == 'true')
+			{
+				$result = 'true';
+			}
+		}
+
+		return $result;
+	}
 }

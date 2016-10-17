@@ -6,7 +6,7 @@ Route::group(['middlewareGroups'=>['web']] , function(){
 	Route::controller('login','Admin\LoginController');
 });
 
-Route::group(['middleware'=>['auth'] ,'prefix'=> \Admin::backendUrl()] , function(){
+Route::group(['middleware'=>['auth','admin'] ,'prefix'=> \Admin::backendUrl()] , function(){
 
 	if(\Schema::hasTable('menus'))
 	{

@@ -36,29 +36,39 @@ $user = user();
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
         @foreach(Site::parents() as $parent)
-          <li class = "{{ Site::isClassTreeview($parent) }}">
-              <a href="{{ Site::urlMenu($parent) }}">
-                <i class="fa fa-link"></i> <span>{{ $parent->title }}</span>
-              </a>
+            @if(Site::urlMenu($parent) ==  '#')
+              @php
+                $countChildIndex =  Site::countChildIndex($parent->childs);
+                if($countChildIndex == 'false')
+                {
+                  continue;
+                }
+              @endphp
+            @endif  
+              <li class = "{{ Site::isClassTreeview($parent) }}">
+                  <a href="{{ Site::urlMenu($parent) }}">
+                    <i class="fa fa-link"></i> <span>{{ $parent->title }}</span>
+                  </a>
+                  @if(Site::countChild($parent) > 0)
+                    <ul class="treeview-menu">
+                      @foreach($parent->childs()->orderBy('order','asc')->get() as $child)
+                        @if(Site::showHideMenu($child) ==  'true')  
+                          <li>
+                            <a href="{{ Site::urlMenu($child) }}">{{ $child->title }}</a>
+                            @if(Site::countChild($child) > 0)
+                              <ul class="treeview-menu">
+                                @foreach($child->childs()->orderBy('order','asc')->get() as $grand)
+                                  <a href="{{ Site::urlMenu($grand) }}">{{ $grand->title }}</a>
+                                @endforeach
+                              </ul>
+                            @endif
+                          </li>
+                        @endif
+                      @endforeach
+                    </ul>
+                  @endif
 
-              @if(Site::countChild($parent) > 0)
-                <ul class="treeview-menu">
-                  @foreach($parent->childs()->orderBy('order','asc')->get() as $child)
-                    <li>
-                      <a href="{{ Site::urlMenu($child) }}">{{ $child->title }}</a>
-                      @if(Site::countChild($child) > 0)
-                        <ul class="treeview-menu">
-                          @foreach($child->childs()->orderBy('order','asc')->get() as $grand)
-                            <a href="{{ Site::urlMenu($grand) }}">{{ $grand->title }}</a>
-                          @endforeach
-                        </ul>
-                      @endif
-                    </li>
-                  @endforeach
-                </ul>
-              @endif
-
-          </li>
+              </li>
         @endforeach
        
       </ul>
