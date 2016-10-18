@@ -37,6 +37,13 @@
             'order'=>2,
         ],['index','create','update','delete']);
 
+        \Admin::addMenu([
+            'parent_id'=>'user',
+            'title'=>'Profile',
+            'controller'=>'Admin\MyProfileController',
+            'slug'=>'my-profile',
+            'order'=>2,
+        ],['index']);
 /**
  * Development
  */
@@ -64,3 +71,4 @@
             'slug'=>'example',
             'order'=>2,
         ],['index','create','update','delete']);
+        

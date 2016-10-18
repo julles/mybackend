@@ -17,7 +17,7 @@ class CreateExamplesTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->enum('gender',['men','women'])->default('men');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

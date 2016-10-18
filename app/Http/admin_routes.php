@@ -22,7 +22,6 @@ Route::group(['middleware'=>['auth','admin'] ,'prefix'=> \Admin::backendUrl()] ,
 			}
 		}
 
-		Route::controller('role','Admin\User\RoleController');
-		Route::controller('example','Admin\ExampleController');
+		Route::get('my-profile/index','Admin\MyProfileController@getMyProfile');
 	}
 });

@@ -68,7 +68,8 @@ class UserController extends AdminController
         ];
 
         $model = $this->model->select($fields)
-        ->join('roles','roles.id','=','users.role_id');
+        ->join('roles','roles.id','=','users.role_id')
+        ->where('users.id','!=',1);
 
         return Table::of($model)
         ->addColumn('action' ,function($model){
@@ -110,6 +111,11 @@ class UserController extends AdminController
 
     public function postUpdate(Request $request,$id)
     {
+        if($id == 1)
+        {
+            return redirect()->back()->withInfo('Super Admin Cannot be updated');
+        }
+
     	$model = $this->model->findOrFail($id);
 
     	$this->validate($request,$model->rules($id));
@@ -125,7 +131,20 @@ class UserController extends AdminController
 
 	public function getDelete($id)
     {
+        if($id == 1)
+        {
+            return redirect()->back()->withInfo('Super Admin Cannot be deleted');
+        }
+
         $model = $this->model->findOrFail($id);
         return $this->delete($model,[$model->avatar]);
+    }
+
+    public function isSuperAdmin($id)
+    {
+        if($id == 1)
+        {
+            return redirect()->back()->withInfo('Super Admin Cannot be deleted');
+        }
     }
 }

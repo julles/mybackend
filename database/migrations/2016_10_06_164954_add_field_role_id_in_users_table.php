@@ -14,7 +14,7 @@ class AddFieldRoleIdInUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->integer('role_id')->unsigned();
-            $table->string('avatar',50);
+            $table->string('avatar',50)->nullable();
             $table->foreign('role_id')
                 ->references('id')
                 ->on('roles')
@@ -28,6 +28,7 @@ class AddFieldRoleIdInUsersTable extends Migration
             'name'=>'Super Admin',
             'email'=>'admin@admin.com',
             'password'=>\Hash::make('admin'),
+            'avatar'=>'user.png',
             'created_at'=>date("Y-m-d H:i:s"),
         ]);
     }

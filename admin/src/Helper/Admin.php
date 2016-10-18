@@ -3,8 +3,15 @@
 use Html;
 use App\Models\Menu;
 use DB;
+use App\Models\Right;
 class Admin
 {
+
+	public function noReply()
+	{
+		return config('admin.noReply');
+	}
+
 	/**
 	 * Mengambil variable defaultPage di file admin.php
 	 * @return [string]
@@ -139,13 +146,8 @@ class Admin
 	{
 		$action = $this->rawAction();
 	
-		if($action == 'index')
-		{
-			$result = 'List';
-		}else{
-			$result = ucwords($action);
-		}
-
+		$result = ucwords($action);
+	
 		return $result;
 	}
 
@@ -192,13 +194,10 @@ class Admin
 		$result = 'false';
 		$role = user()->role;
 		$actionCode = !empty($actionCode) ? $actionCode : $actionCode = $this->rawAction();
-		if($role->id == 1)
-		{
-			$result = 'true';
-		}else{
+		
 			if(!empty($actionCode))
 			{
-				$action = $this->cekMenuAction($actionCode);
+				$action = $this->dbAction($actionCode);
 
 				if(empty($action->id))
 				{
@@ -207,20 +206,25 @@ class Admin
 					$menu = empty($menu) ? $this->getMenu() : $menu;
 					$cek = $menu->menuAction()
 					->where('action_id',$action->id)
-					->first()
-					->rights()
-					->where('role_id',$role->id)
 					->first();
-
+					
 					if(!empty($cek->id))
 					{
-						$result = "true";
+						$right = Right::whereMenuActionId($cek->id)
+							->whereRoleId(user()->role->id)
+							->first();
+						
+						if(!empty($right->id))
+						{
+							$result = "true";
+						}else{
+							$result = 'false';
+						}
 					}else{
 						$result = 'false';
 					}
 				}
 			}
-		}
 		return $result;	
 	}
 
@@ -228,7 +232,6 @@ class Admin
 
 	public function linkCreate()
 	{
-
 		$create = $this->cekRight('create');
 		if($create == 'true')
 			return Html::link($this->urlBackendAction('create'),'Create',[
@@ -337,36 +340,48 @@ class Admin
 
 	public function addMenu($params=[] , $actions=[])
 	{
-		$cek = $this->getMenu($params['slug']);
+		DB::beginTransaction();
+	
+		try {
+				$cek = $this->getMenu($params['slug']);
 
-		if(empty($cek->slug))
-		{
-			if($params['parent_id'] != null)
-			{
-				$cekParent = $this->getMenu($params['parent_id']);
-
-				if(!empty($cekParent->slug))
+				if(empty($cek->slug))
 				{
-					$params['parent_id'] = $cekParent->id;
-				}
-			}
+					if($params['parent_id'] != null)
+					{
+						$cekParent = $this->getMenu($params['parent_id']);
 
-			$model = Menu::create($params);
-			
-			$modelMenuAction = $this->inject('MenuAction');
-			
-			foreach($actions as $action)
-			{
-				$modelAction = $this->dbAction($action);
-				if(!empty($modelAction->id))
-				{
-					$save = $modelMenuAction->create([
-						'menu_id'=>$model->id,
-						'action_id'=>$modelAction->id,
-					]);
+						if(!empty($cekParent->slug))
+						{
+							$params['parent_id'] = $cekParent->id;
+						}
+					}
+
+					$model = Menu::create($params);
+					
+					$modelMenuAction = $this->inject('MenuAction');
+					
+					foreach($actions as $action)
+					{
+						$modelAction = $this->dbAction($action);
+						if(!empty($modelAction->id))
+						{
+							$save = $modelMenuAction->create([
+								'menu_id'=>$model->id,
+								'action_id'=>$modelAction->id,
+							]);
+
+							Right::create([
+								'role_id'=>1,
+								'menu_action_id'=>$save->id,
+							]);
+						}
+					}		
 				}
-			}		
-		}
+				DB::commit();		
+		} catch (Exception $e) {
+				DB::rollback();
+		}			
 	}
 
 	public function updateMenu($params=[] , $actions=[])
@@ -394,9 +409,14 @@ class Admin
 			$modelAction = $this->dbAction($action);
 			if(!empty($modelAction->id))
 			{
+				//$modelMenuAction->whereMenuId($model->id)->delete();
 				$save = $modelMenuAction->create([
 					'menu_id'=>$model->id,
 					'action_id'=>$modelAction->id,
+				]);
+				Right::create([
+					'role_id'=>1,
+					'menu_action_id'=>$save->id,
 				]);
 			}
 		}

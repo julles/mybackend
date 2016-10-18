@@ -103,7 +103,7 @@ desired effect
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="{{ Admin::assetAdmin() }}/#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="{{ Admin::urlBackend('my-profile/index') }}" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                   <a href="{{ url('login/sign-out') }}" class="btn btn-default btn-flat">Sign out</a>
