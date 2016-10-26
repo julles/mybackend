@@ -14,51 +14,51 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-		    	
+                
     }
 
     public function insertOrUpdate($inputs , $model)
     {
-    	if(!empty($model->id))
-    	{
-    		$model->update($inputs);
-    		$message = 'Data has been updated';
-    	}else{
-    		$model->create($inputs);
-    		$message = 'Data has been saved';
-    	}
+        if(!empty($model->id))
+        {
+            $model->update($inputs);
+            $message = 'Data has been updated';
+        }else{
+            $model->create($inputs);
+            $message = 'Data has been saved';
+        }
 
-    	
-    	return redirect(Admin::urlBackendAction('index'))
-    		->withSuccess($message);
+        
+        return redirect(Admin::urlBackendAction('index'))
+            ->withSuccess($message);
     }
 
     public function delete($model,$images=[])
     {
-    	try
-    	{
+        try
+        {
             foreach($images as $image)
             {
                 @unlink(Admin::publicContents($image));
             }
 
-    		$model->delete();
-    		
+            $model->delete();
+            
             return redirect(Admin::urlBackendAction('index'))
-    		
+            
             ->withSuccess("Data has been deleted");
-    	
+        
         }catch(\Exception $e){
-    	
-        	return redirect(Admin::urlBackendAction('index'))
-    	
-        	->withSuccess("Data cannot be deleted");
-    	
+        
+            return redirect(Admin::urlBackendAction('index'))
+        
+            ->withSuccess("Data cannot be deleted");
+        
         }
     }
 
     
-    public function form($model,$setForm)
+    public function form($model,$setForm,$variables = [])
     {
         $model = $model;
 
@@ -67,6 +67,7 @@ class AdminController extends Controller
         return view('admin.scaffolding.form' , [
             'model'=>$model,
             'forms'=>$forms,
+            $variables,
         ]);
     }
 
