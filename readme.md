@@ -26,14 +26,14 @@ cp .env.example .env
 setting koneksi database di file .env
 
 ``` sh
-composer install
-```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=mybackend
 DB_USERNAME=root
 DB_PASSWORD=terserahdikau
+```
+
 
 
 install depedencies
