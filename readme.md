@@ -22,7 +22,7 @@ copy file .env.example
 
 ``` sh
 cp .env.example .env
-
+```
 setting koneksi database di file .env
 
 ``` sh
