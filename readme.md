@@ -18,7 +18,7 @@ clone project atau download source mybackend
 clone https://github.com/julles/mybackend.git
 ```
 
-copy file .env.example
+copy file .env.example menjadi .env
 
 ``` sh
 cp .env.example .env
