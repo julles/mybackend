@@ -14,7 +14,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-                
+
     }
 
     public function insertOrUpdate($inputs , $model)
@@ -28,7 +28,7 @@ class AdminController extends Controller
             $message = 'Data has been saved';
         }
 
-        
+
         return redirect(Admin::urlBackendAction('index'))
             ->withSuccess($message);
     }
@@ -43,21 +43,21 @@ class AdminController extends Controller
             }
 
             $model->delete();
-            
+
             return redirect(Admin::urlBackendAction('index'))
-            
+
             ->withSuccess("Data has been deleted");
-        
+
         }catch(\Exception $e){
-        
+
             return redirect(Admin::urlBackendAction('index'))
-        
+
             ->withSuccess("Data cannot be deleted");
-        
+
         }
     }
 
-    
+
     public function form($model,$setForm,$variables = [])
     {
         $model = $model;
@@ -74,7 +74,7 @@ class AdminController extends Controller
     public function handleUpload($request,$model,$fieldName,$resize=[])
     {
        $image = $request->file($fieldName);
-       
+
         if(!empty($image))
         {
             if(!empty($model->$fieldName))
@@ -101,5 +101,37 @@ class AdminController extends Controller
         }
     }
 
+    public function listing($model , $fields, $variables=[])
+    {
+      $fieldJson = json_encode($fields);
+      return view('admin.scaffolding.listing' , [
+          'fields'=>$fields,
+          'model'=>$model,
+          $variables,
+      ]);
+    }
 
+    public function injectModel($model)
+    {
+      $model = "App\Models\\$model";
+
+      return new $model;
+    }
+
+    public function datatablesdata()
+    {
+
+        $fields = request()->get('fields');
+        $model = request()->get('model');
+        $menu = request()->get('menu');
+        $inst = $this->injectModel($model);
+        $query = $inst->select($fields);
+        $menu = Admin::getMenu($menu);
+        
+        return Table::of($query)
+        ->addColumn('action' ,function($query)use($menu){
+            return \Admin::linkActions($query->id,$menu);
+        })
+        ->make(true);
+    }
 }

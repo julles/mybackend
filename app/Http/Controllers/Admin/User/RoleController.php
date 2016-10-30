@@ -35,7 +35,7 @@ class RoleController extends AdminController
         return $forms;
     }
 
-    public function getData()
+	  public function getData()
     {
         $fields = [
             'id',
@@ -51,7 +51,7 @@ class RoleController extends AdminController
                 return Admin::linkActions($model->id);
             }else{
                 return '-';
-            }    
+            }
         })
         ->make(true);
     }
@@ -110,7 +110,7 @@ class RoleController extends AdminController
             'model'=>$model,
             'menus'=>$menus,
         ]);
-    }    
+    }
 
     public function postView(Request $request , $id)
     {
@@ -143,7 +143,7 @@ class RoleController extends AdminController
             DB::rollback();
             return redirect(Admin::urlBackendAction('index'))
                 ->with('info','Data cannot be updated'.json_encode($e));
-        }    
+        }
     }
 
     public function exception($model)
@@ -151,7 +151,7 @@ class RoleController extends AdminController
         if($model->id == 1)
         {
            throw new \Exception("Maaf Superadmin tidak bisa dihapus atau di update :) silahkan cek method exception()", 1);
-             
+
         }
     }
 }

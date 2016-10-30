@@ -23,5 +23,7 @@ Route::group(['middleware'=>['auth','admin'] ,'prefix'=> \Admin::backendUrl()] ,
 		}
 
 		Route::get('my-profile/index','Admin\MyProfileController@getMyProfile');
+
+		Route::get('grab-data','Admin\AdminController@datatablesdata');
 	}
 });

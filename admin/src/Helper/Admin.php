@@ -51,7 +51,7 @@ class Admin
 
 	/**
 	 * mengambil data prefix di route group admin
-	 * @return [string] 
+	 * @return [string]
 	 */
 	public function getPrefix()
 	{
@@ -70,26 +70,26 @@ class Admin
 	}
 
 	/**
-	 * mengambil action di url 
+	 * mengambil action di url
 	 * @return [string] ex : index,update,delete
 	 */
 	public function rawAction()
 	{
-		$url =  request()->url();	
+		$url =  request()->url();
 		$arr = explode("/",$url);
 		$count = count($arr);
 		$end = end($arr);
 		$min = is_numeric($end) ? 2 : 1;
-		return $arr[$count-$min];	
+		return $arr[$count-$min];
 	}
 
 	/**
-	 * mengambil menu di url 
+	 * mengambil menu di url
 	 * @return [string] ex : role,user,ect.
 	 */
 	public function rawMenu()
 	{
-		$url =  request()->url();	
+		$url =  request()->url();
 		$arr = explode("/",$url);
 		$count = count($arr);
 		$end = end($arr);
@@ -113,7 +113,7 @@ class Admin
 		}else{
 			$model = $model->whereSlug($this->rawMenu());
 		}
-		
+
 		return $model->first();
 	}
 
@@ -145,9 +145,9 @@ class Admin
 	public function labelAction()
 	{
 		$action = $this->rawAction();
-	
+
 		$result = ucwords($action);
-	
+
 		return $result;
 	}
 
@@ -194,7 +194,7 @@ class Admin
 		$result = 'false';
 		$role = user()->role;
 		$actionCode = !empty($actionCode) ? $actionCode : $actionCode = $this->rawAction();
-		
+
 			if(!empty($actionCode))
 			{
 				$action = $this->dbAction($actionCode);
@@ -207,13 +207,13 @@ class Admin
 					$cek = $menu->menuAction()
 					->where('action_id',$action->id)
 					->first();
-					
+
 					if(!empty($cek->id))
 					{
 						$right = Right::whereMenuActionId($cek->id)
 							->whereRoleId(user()->role->id)
 							->first();
-						
+
 						if(!empty($right->id))
 						{
 							$result = "true";
@@ -225,10 +225,10 @@ class Admin
 					}
 				}
 			}
-		return $result;	
+		return $result;
 	}
 
-	
+
 
 	public function linkCreate()
 	{
@@ -239,33 +239,52 @@ class Admin
 			]);
 	}
 
-	public function linkUpdate($plus="")
+	public function linkUpdate($plus="",$menu="")
 	{
-		$update = $this->cekRight('update');
-		
-		if($update == 'true')	
-			return Html::link($this->urlBackendAction('update/'.$plus),'Update',[
+		$update = $this->cekRight('update',$menu);
+
+		if(!empty($menu->id))
+		{
+			$url = $this->urlBackend($menu->slug.'/update/'.$plus);
+		}else{
+			$url = $this->urlBackendAction('update/'.$plus);
+		}
+
+		if($update == 'true')
+			return Html::link($url,'Update',[
 				'class'=>'btn btn-success btn-sm'
 			]);
 	}
 
-	public function linkView($plus="")
+	public function linkView($plus="",$menu = "")
 	{
-		$view = $this->cekRight('view');
-		
-		if($view == 'true')	
-			return Html::link($this->urlBackendAction('view/'.$plus),'View',[
+		$view = $this->cekRight('view' , $menu);
+		if(!empty($menu->id))
+		{
+			$url = $this->urlBackend($menu->slug.'/view/'.$plus);
+		}else{
+			$url = $this->urlBackendAction('view/'.$plus);
+		}
+
+		if($view == 'true')
+			return Html::link($url,'View',[
 				'class'=>'btn btn-info btn-sm'
 			]);
 	}
 
-	public function linkDelete($plus="")
+	public function linkDelete($plus="",$menu)
 	{
-		$delete = $this->cekRight('delete');
-		
-		if($delete == 'true')	
-		
-			return Html::link($this->urlBackendAction('delete/'.$plus),'Delete',[
+		$delete = $this->cekRight('delete',$menu);
+		if(!empty($menu->id))
+		{
+			$url = $this->urlBackend($menu->slug.'/delete/'.$plus);
+		}else{
+			$url = $this->urlBackendAction('delete/'.$plus);
+		}
+
+		if($delete == 'true')
+
+			return Html::link($url,'Delete',[
 				'class'=>'btn btn-danger btn-sm',
 				'onclick'=>'return confirm("Are you sure want to delete this item ?")'
 			]);
@@ -273,10 +292,10 @@ class Admin
 
 	public function linkPublish()
 	{
-		
+
 	}
 
-	public function linkActions($plus="")
+	public function linkActions($plus="",$menu="")
 	{
 		$actions = $this->inject('Action')
 			->select('code')
@@ -289,7 +308,7 @@ class Admin
 		{
 			$upper = ucwords($action->code);
 			$method = "link$upper";
-			$links .= $this->{$method}($plus).' ';
+			$links .= $this->{$method}($plus,$menu).' ';
 		}
 
 		return $links;
@@ -320,7 +339,7 @@ class Admin
 	public function inject($model)
 	{
 		$model =  "App\Models\\$model";
-	
+
 		return new $model;
 	}
 
@@ -341,7 +360,7 @@ class Admin
 	public function addMenu($params=[] , $actions=[])
 	{
 		DB::beginTransaction();
-	
+
 		try {
 				$cek = $this->getMenu($params['slug']);
 
@@ -358,9 +377,9 @@ class Admin
 					}
 
 					$model = Menu::create($params);
-					
+
 					$modelMenuAction = $this->inject('MenuAction');
-					
+
 					foreach($actions as $action)
 					{
 						$modelAction = $this->dbAction($action);
@@ -376,12 +395,12 @@ class Admin
 								'menu_action_id'=>$save->id,
 							]);
 						}
-					}		
+					}
 				}
-				DB::commit();		
+				DB::commit();
 		} catch (Exception $e) {
 				DB::rollback();
-		}			
+		}
 	}
 
 	public function updateMenu($params=[] , $actions=[])
@@ -395,15 +414,15 @@ class Admin
 			$params['parent_id'] = $cekParent->id;
 		}
 
-		
+
 		$cek->menuAction()->delete();
 
 		$model = $this->getMenu($params['slug']);
-		
+
 		$model->update($params);
 
 		$modelMenuAction = $this->inject('MenuAction');
-		
+
 		foreach($actions as $action)
 		{
 			$modelAction = $this->dbAction($action);
@@ -426,4 +445,21 @@ class Admin
 	{
 		$this->getMenu($slug)->delete();
 	}
+
+	public function urlData()
+	{
+		return $this->urlBackend('grab-data');
+	}
+
+	public function array_key_flatten($arrays)
+	{
+		$result = [];
+		foreach($arrays as $key => $val)
+		{
+			$result[] = is_numeric($key) ? $val : $key;
+		}
+
+		return $result;
+	}
+
 }

@@ -52,32 +52,23 @@ class ExampleController extends AdminController
     	return $forms;
     }
 
-    /**
-     * Method yang di gunakan untuk mengeluarkan data dari record table examples
-     * berdasarkan query yang sudah ditentukan, method pendukung datatables server side
-     * yang berada di method getIndex()
-     * @return [json]
-     */
-    public function getData()
+    public function fields()
     {
-        $fields = [
-            'id',
-            'name',
-            'email',
-        ];
-
-        $model = $this->model->select($fields);
-
-        return Table::of($model)
-        ->addColumn('action' ,function($model){
-            return Admin::linkActions($model->id);
-        })
-        ->make(true);
+      return [
+          'id' => [
+            'enabled'=>false,
+          ],
+          'name' => [
+            'label'=>'Nama',
+            'enabled'=>true,
+          ],
+          'email',
+      ];
     }
-    
+
     public function getIndex()
     {
-        return view('admin.example.index');
+       return $this->listing('Example' , $this->fields());
     }
 
     public function getCreate()
