@@ -55,3 +55,8 @@ https://yoururl.dev/login
 email : admin@admin.com
 
 password : admin
+
+
+#license
+
+https://reza.mit-license.org/

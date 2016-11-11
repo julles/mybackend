@@ -111,6 +111,16 @@ class AdminController extends Controller
       ]);
     }
 
+    public function listingRender($fields, $variables=[])
+    {
+      $fieldJson = json_encode($fields);
+      return view('admin.scaffolding.listing_render' , [
+          'fields'=>$fields,
+          'model'=>$model,
+          $variables,
+      ]);
+    }
+
     public function injectModel($model)
     {
       $model = "App\Models\\$model";
@@ -127,7 +137,7 @@ class AdminController extends Controller
         $inst = $this->injectModel($model);
         $query = $inst->select($fields);
         $menu = Admin::getMenu($menu);
-        
+
         return Table::of($query)
         ->addColumn('action' ,function($query)use($menu){
             return \Admin::linkActions($query->id,$menu);
