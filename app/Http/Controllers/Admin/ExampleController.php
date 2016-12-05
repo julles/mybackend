@@ -82,8 +82,6 @@ class ExampleController extends AdminController
 
     public function postCreate(Requests\Admin\ExampleRequest $request)
     {
-        $this->validate($request,$this->model->rules());
-
         $inputs = $request->all();
 
         $inputs['image']=$this->handleUpload($request,$this->model,'image',[100,100]);
@@ -99,8 +97,6 @@ class ExampleController extends AdminController
     public function postUpdate(Request $request,$id)
     {
         $model = $this->model->findOrFail($id);
-
-        $this->validate($request,$this->model->rules());
 
         $inputs = $request->all();
 
