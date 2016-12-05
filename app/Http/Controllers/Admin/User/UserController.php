@@ -17,6 +17,7 @@ class UserController extends AdminController
     {
     	parent::__construct();
     	$this->model = $model;
+        $this->validation = 'App\Http\Requests\Admin\User\UserRequest';
     }
 
     public function roles()
@@ -88,11 +89,9 @@ class UserController extends AdminController
     	return $this->form($this->model,$this->setForm());
     }
 
-    public function postCreate(Request $request)
+    public function postCreate(Requests\Admin\User\UserRequest $request)
     {
     	$model = $this->model;
-
-    	$this->validate($request,$model->rules());
 
     	$inputs = $request->all();
 
@@ -109,7 +108,7 @@ class UserController extends AdminController
     	return $this->form($model,$this->setForm());
     }
 
-    public function postUpdate(Request $request,$id)
+    public function postUpdate(Requests\Admin\User\UserRequest $request,$id)
     {
         if($id == 1)
         {

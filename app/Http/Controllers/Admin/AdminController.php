@@ -67,6 +67,7 @@ class AdminController extends Controller
         return view('admin.scaffolding.form' , [
             'model'=>$model,
             'forms'=>$forms,
+            'validation'=>!empty($this->validation) ? $this->validation : '',
             $variables,
         ]);
     }

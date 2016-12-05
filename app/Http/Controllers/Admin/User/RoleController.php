@@ -20,6 +20,7 @@ class RoleController extends AdminController
         parent::__construct();
 		$this->model = $model;
         $this->view = 'admin.user.role.';
+        $this->validation = 'App\Http\Requests\Admin\User\Role';
     }
 
     public function setForm()

@@ -1,5 +1,6 @@
 @extends('admin.layouts.layout')
 @section('content')
+
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -10,7 +11,7 @@
       <div class="row">
           <div class="col-md-12">
               <div class="box box-primary">
-                  {!! Form::model($model,['files'=>true]) !!}
+                  {!! Form::model($model,['files'=>true,'id'=>'mybackend_form']) !!}
                     <div class="box-body">
                       
                       @include('admin.flashes.flash')
@@ -75,3 +76,9 @@
   </div>
   <!-- /.content-wrapper -->
 @endsection
+@push('scripts')
+
+@if(!empty($validation))
+  {!! JsValidator::formRequest($validation,'#mybackend_form') !!}
+@endif
+@endpush

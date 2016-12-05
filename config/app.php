@@ -160,6 +160,7 @@ return [
         Admin\Providers\AdminProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Proengsoft\JsValidation\JsValidationServiceProvider::class,
     ],
 
     /*
@@ -210,7 +211,8 @@ return [
         'Table' => Yajra\Datatables\Facades\Datatables::class,
         'Admin'=>Admin\Facades\AdminFacade::class,
         'Site'=>Admin\Facades\SiteFacade::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
     ],
 
 ];

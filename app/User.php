@@ -29,15 +29,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class,'role_id');
     }
-
-    public function rules($id="")
-    {
-        return [
-            'name'=>'required|max:100',
-            'email'=>'required|email|unique:users,email,'.$id,
-            'password'=>'required',
-            'verify_password'=>'same:password',
-            'avatar'=>'image',
-        ];
-    }
 }

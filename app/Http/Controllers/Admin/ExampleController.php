@@ -17,6 +17,7 @@ class ExampleController extends AdminController
     {
     	parent::__construct();
     	$this->model = $model;
+        $this->validation = 'App\Http\Requests\Admin\ExampleRequest';
     }
 
     /**
@@ -73,10 +74,10 @@ class ExampleController extends AdminController
 
     public function getCreate()
     {
-    	return $this->form($this->model,$this->setForm());
+        return $this->form($this->model,$this->setForm());
     }
 
-    public function postCreate(Request $request)
+    public function postCreate(Requests\Admin\ExampleRequest $request)
     {
         $this->validate($request,$this->model->rules());
 

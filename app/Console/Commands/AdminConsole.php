@@ -51,7 +51,7 @@ class AdminConsole extends Command
                 \Artisan::call('db:seed');
             }
         }
-
+        \Artisan::call('vendor:publish');
         $this->output->progressFinish();
         $this->line('Update Telah Berhasil :)');
         $this->line('By : Muhamad Reza');
