@@ -99,7 +99,7 @@
 <script src="{{ Admin::assetAdmin() }}/plugins/datatables/jquery.dataTables.min.js"></script>
 
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-
+@include('admin.js')
 @stack('scripts')
 
 </body>

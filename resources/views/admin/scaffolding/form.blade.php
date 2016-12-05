@@ -47,7 +47,7 @@
                           @if($prop['type'] == 'select')
                             {!! Form::{$prop['type']}($name,$prop['selects'],$value ,$properties) !!}
                           @elseif($prop['type'] == 'file' ||  $prop['type'] == 'password')
-                              {!! Form::{$prop['type']}($name,$properties) !!}
+                              {!! Admin::htmlImage($name,$model->{$name}) !!}
                           @else
                             {!! Form::{$prop['type']}($name,$value,$properties) !!}
                           @endif
@@ -55,8 +55,7 @@
                         </div>
                           @if($prop['type'] == 'file' && !empty($model->{$name}))
                             <div class="form-group">
-                              <label>Old {{ ucwords($name) }}</label> <br/>
-                              {!! Html::image(Admin::assetContents($model->{$name}) , null , ['width'=>100,'height'=>100]) !!}
+                              <img id = 'image_<?php $model->{$name} ?>' >
                             </div>
                           @endif
                       @endforeach

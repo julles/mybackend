@@ -36,7 +36,7 @@ class RoleController extends AdminController
         return $forms;
     }
 
-	  public function getData()
+	public function getData()
     {
         $fields = [
             'id',
@@ -117,7 +117,7 @@ class RoleController extends AdminController
     {
         $count = count($request->menu_action_id);
         $role = $this->model->findOrFail($id);
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
         try
         {

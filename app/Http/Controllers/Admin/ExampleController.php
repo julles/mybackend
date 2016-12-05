@@ -53,6 +53,9 @@ class ExampleController extends AdminController
     	return $forms;
     }
 
+    /**
+     * Listing fields from table
+     */
     public function fields()
     {
       return [

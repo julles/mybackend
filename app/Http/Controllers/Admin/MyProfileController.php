@@ -15,6 +15,7 @@ class MyProfileController extends AdminController
 	{
 	   parent::__construct();
 	   $this->model = User::findOrFail(user()->id);
+       $this->validation = 'App\Http\Requests\Admin\User\UserRequest';
     }
 
 	public function setForm()
@@ -57,16 +58,14 @@ class MyProfileController extends AdminController
     	return $this->form($model,$this->setForm());
     }
 
-    public function postIndex(Request $request)
+    public function postIndex(Requests\Admin\User\UserRequest $request)
     {
         $model = $this->model;
 
         $id = $model->id;
 
         $request->role_id = $model->role_id;
-
-        $this->validate($request,$model->rules($id));
-
+        
         $inputs = $request->all();
 
         $inputs['avatar']=$this->handleUpload($request,$model,'avatar',[160,160]);

@@ -23,9 +23,11 @@ class UserRequest extends Request
      */
     public function rules()
     {
+        $id = \Admin::getMenu()->slug == 'my-profile' ? user()->id : \Admin::getId();
+
         return [
             'name'=>'required|max:100',
-            'email'=>'required|email|unique:users,email,'.\Admin::getId(),
+            'email'=>'required|email|unique:users,email,'.$id,
             'password'=>'required',
             'verify_password'=>'same:password',
             'avatar'=>'image',
