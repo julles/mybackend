@@ -46,8 +46,10 @@
 
                           @if($prop['type'] == 'select')
                             {!! Form::{$prop['type']}($name,$prop['selects'],$value ,$properties) !!}
-                          @elseif($prop['type'] == 'file' ||  $prop['type'] == 'password')
+                          @elseif($prop['type'] == 'file')
                               {!! Admin::htmlImage($name,$model->{$name}) !!}
+                          @elseif($prop['type'] == 'password')
+                              {!! Form::{$prop['type']}($name,$properties) !!}
                           @else
                             {!! Form::{$prop['type']}($name,$value,$properties) !!}
                           @endif
