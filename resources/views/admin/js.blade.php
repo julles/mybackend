@@ -9,5 +9,16 @@ function readURL(input,image_id) {
 		    reader.readAsDataURL(input.files[0]);
 		}
 }	
+
+$(document).ready(function(){
+	$("button").on('click',function(){
+		var $this = $(this);
+		$this.button('loading');
+
+		setTimeout(function(){
+			$this.button('reset');
+		},2000);
+	});
+});
 </script>
 @endpush
