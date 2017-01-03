@@ -26,10 +26,10 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Admin\\": "admin/src/"
+            "Admin\\": "packages/admin/src/"
         },
         "files":[
-            "admin/src/auto_functions.php"
+            "packages/admin/src/auto_functions.php"
         ]
     },
     "autoload-dev": {
