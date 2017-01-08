@@ -103,9 +103,14 @@ class Admin
 	 * @param  string $slug [paramter pembanding slug]
 	 * @return [string]
 	 */
-	public function getMenu($slug = "")
+	public function getMenu($slug = "",$relation = [])
 	{
-		$model = new Menu;
+		$model = new Menu();
+
+		if(!empty($relation))
+		{
+			$model->with($relation);
+		}
 
 		if(!empty($slug))
 		{
@@ -119,7 +124,9 @@ class Admin
 
 	public function getParentMenu($slug = "")
 	{
-		$menu = $this->getMenu($slug);
+		$relation = ['parent'];
+
+		$menu = $this->getMenu($slug,$relation);
 
 		return $menu->parent;
 	}
@@ -180,8 +187,9 @@ class Admin
 
 	public function cekMenuAction($code)
 	{
-		$menu = $this->getMenu();
+		$relation = ['actions'];
 
+		$menu = $this->getMenu("",$relation);
 		$action = $menu->actions()
 			->whereCode($code)
 			->first();

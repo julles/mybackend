@@ -7,6 +7,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 use App\Models\MenuAction;
 use App\Models\Right;
+use App\User;
 
 class Role extends Model
 {
@@ -37,5 +38,10 @@ class Role extends Model
     public function rights()
     {
         return $this->hasMany(Right::class,'role_id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class,'role_id');
     }
 }

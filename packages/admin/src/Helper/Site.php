@@ -8,7 +8,8 @@ class Site extends Admin
 {
 	public function parents()
 	{
-		$model = Menu::where('parent_id','=',null)
+		$model = Menu::with('childs')
+			->where('parent_id','=',null)
 			->orderBy('order','asc')
 			->get();
 
@@ -54,7 +55,7 @@ class Site extends Admin
 
 	public function parentIsNotNull()
 	{
-		$model = new Menu;
+		$model = new Menu();
 
 		$model = $model->where('controller','!=',null)
 			->get();
