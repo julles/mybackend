@@ -49,6 +49,7 @@ class AdminConsole extends Command
             {
                 \Artisan::call('migrate');
                 \Artisan::call('db:seed');
+                \Artisan::call('key:generate');
             }
         }
         \Artisan::call('vendor:publish');
