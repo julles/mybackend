@@ -472,7 +472,7 @@ class Admin
 
 	public function htmlImage($name,$imagePath="")
 	{
-		$image=\Form::file($name,['id'=>$name,'onchange'=>"readURL(this,'image_$name')"]);
+		$image=\Form::file($name,['id'=>$name,'onchange'=>"readURL(this,'image_$name')","accept"=>"image/*"]);
 		$image.= \Html::image(asset('contents/'.$imagePath),'',['height'=>100,'width'=>100,'id'=>'image_'.$name]);
         return $image;                       
 	}
