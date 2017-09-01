@@ -161,6 +161,7 @@ return [
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Proengsoft\JsValidation\JsValidationServiceProvider::class,
+        Spatie\Activitylog\ActivitylogServiceProvider::class,
     ],
 
     /*
@@ -213,6 +214,7 @@ return [
         'Site'=>Admin\Facades\SiteFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
+        'Activity' => Spatie\Activitylog\ActivitylogFacade::class,
     ],
 
 ];

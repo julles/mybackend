@@ -28,5 +28,7 @@ Route::group(['middleware'=>['auth','admin'] ,'prefix'=> \Admin::backendUrl()] ,
 		Route::get('my-profile/index','Admin\MyProfileController@getMyProfile');
 
 		Route::get('grab-data','Admin\AdminController@datatablesdata');
+
+		Route::get('delete-image/{image}/{token}','Admin\DeleteImageController@delete');
 	}
 });

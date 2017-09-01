@@ -472,9 +472,30 @@ class Admin
 
 	public function htmlImage($name,$imagePath="")
 	{
+		$token = $this->generateToken(auth()->user()->id);
 		$image=\Form::file($name,['id'=>$name,'onchange'=>"readURL(this,'image_$name')","accept"=>"image/*"]);
 		$image.= \Html::image(asset('contents/'.$imagePath),'',['height'=>100,'width'=>100,'id'=>'image_'.$name]);
+        $image.="<br>".\Html::link($this->urlBackend('delete-image/'.$imagePath.'/'.$token),'Delete Image');
         return $image;                       
 	}
 
+	public function generateToken($string)
+	{
+		return md5(md5($string.'1234567890-=!@#$%^&*()_+'));
+	}
+
+	public function activityUser()
+	{
+		$user = auth()->user();
+		$request = request()->method();
+
+		if($request == 'GET')
+		{
+			$words ='Membuka halaman : '.request()->url();
+		}else{
+			$words ='Request Post ke halaman : '.request()->url();
+		}
+
+		\Activity::log($words);
+    }
 }

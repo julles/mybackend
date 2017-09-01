@@ -20,7 +20,7 @@ class Right
         {
             abort(401);
         }
-
+        \Admin::activityUser();
         return $next($request);
     }
 }

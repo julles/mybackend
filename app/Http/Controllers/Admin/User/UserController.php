@@ -54,7 +54,7 @@ class UserController extends AdminController
     				'class'=>null,
     			],
     		],
-    	];
+        ];
 
     	return $forms;
     }
@@ -116,8 +116,6 @@ class UserController extends AdminController
         }
 
     	$model = $this->model->findOrFail($id);
-
-    	$this->validate($request,$model->rules($id));
 
     	$inputs = $request->all();
 

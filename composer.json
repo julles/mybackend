@@ -11,7 +11,8 @@
         "yajra/laravel-datatables-oracle": "^6.19",
         "cviebrock/eloquent-sluggable": "^4.1",
         "intervention/image": "^2.3",
-        "proengsoft/laravel-jsvalidation": "~1.3.1"
+        "proengsoft/laravel-jsvalidation": "~1.3.1",
+        "spatie/activitylog": "^2.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

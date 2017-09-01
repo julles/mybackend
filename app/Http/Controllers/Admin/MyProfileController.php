@@ -14,7 +14,7 @@ class MyProfileController extends AdminController
 	public function __construct()
 	{
 	   parent::__construct();
-	   $this->model = User::findOrFail(user()->id);
+       $this->model = User::findOrFail(user()->id);
        $this->validation = 'App\Http\Requests\Admin\User\UserRequest';
     }
 
